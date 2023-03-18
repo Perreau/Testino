@@ -60,7 +60,8 @@ struct PollView: View {
                 .font(.largeTitle)
                 .padding()
             
-            ForEach(appState.currentUser?.attributes.keys.sorted() ?? [], id: \.self) { colleague in
+            let colleagues = Array(appState.currentUser?.attributes.keys.shuffled().prefix(4) ?? [])
+            ForEach(colleagues, id: \.self) { colleague in
                 Button(action: {
                     selectedAnswer = colleague
                 }) {
