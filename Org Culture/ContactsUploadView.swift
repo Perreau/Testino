@@ -12,7 +12,7 @@ struct ContactsUploadView: View {
     @EnvironmentObject var appState: AppState
     @State private var showAlert: Bool = false
     @State private var selectedContacts: [User] = []
-    @State private var newEmail: String = ""
+    @State private var newEmails: [String] = Array(repeating: "", count: 4)
 
     private func uploadContacts() {
         let store = CNContactStore()
@@ -35,16 +35,15 @@ struct ContactsUploadView: View {
         }
     }
 
-    private func addEmail() {
-        if newEmail.isEmpty {
-            showAlert = true
-            return
+    private func addEmails() {
+        for email in newEmails {
+            if !email.isEmpty {
+                let colleague = User(email: email)
+                appState.currentUser?.addColleague(colleague)
+                selectedContacts.append(colleague)
+            }
         }
-
-        let colleague = User(email: newEmail)
-        appState.currentUser?.addColleague(colleague)
-        selectedContacts.append(colleague)
-        newEmail = ""
+        appState.contactsUploaded = true
     }
 
     var body: some View {
@@ -69,40 +68,27 @@ struct ContactsUploadView: View {
                 Alert(title: Text("Error"), message: Text("There was an error uploading your contacts. Please try again."), dismissButton: .default(Text("OK")))
             }
 
-            TextField("Add email address", text: $newEmail)
-                .padding()
-                .background(Color(white: 0.9))
-                .cornerRadius(8)
-                .padding()
+            ForEach(0..<max(0, 4 - selectedContacts.count), id: \.self) { index in
+                TextField("Add email address", text: $newEmails[index])
+                    .padding()
+                    .background(Color(white: 0.9))
+                    .cornerRadius(8)
+                    .padding(.horizontal)
+            }
 
             Button(action: {
-                addEmail()
+                addEmails()
             }) {
-                Text("Add Email")
+                Text("Submit")
                     .font(.title)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.green)
+                    .background(selectedContacts.count + newEmails.filter { !$0.isEmpty }.count >= 4 ? Color.green : Color.gray)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
             .padding()
-
-            // Modify the Skip button to be visible only if there are at least four contacts
-            if selectedContacts.count >= 4 {
-                Button(action: {
-                    appState.contactsUploaded = true
-                }) {
-                    Text("Skip")
-                        .font(.title)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.gray)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
-                .padding()
-            }
+            .disabled(selectedContacts.count + newEmails.filter { !$0.isEmpty }.count < 4)
         }
         .padding()
     }
