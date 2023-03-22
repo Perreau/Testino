@@ -6,90 +6,123 @@
 //
 
 import SwiftUI
-import Contacts
+import ContactsUI
 
 struct ContactsUploadView: View {
     @EnvironmentObject var appState: AppState
-    @State private var showAlert: Bool = false
-    @State private var selectedContacts: [User] = []
-    @State private var newEmails: [String] = Array(repeating: "", count: 4)
-
-    private func uploadContacts() {
-        let store = CNContactStore()
-        let keysToFetch = [CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor, CNContactEmailAddressesKey as CNKeyDescriptor]
-
-        let request = CNContactFetchRequest(keysToFetch: keysToFetch)
-
-        do {
-            try store.enumerateContacts(with: request) { (contact, _) in
-                if let emailAddress = contact.emailAddresses.first?.value as String? {
-                    let colleague = User(email: emailAddress)
-                    appState.currentUser?.addColleague(colleague)
-                    selectedContacts.append(colleague)
-                }
-            }
-            appState.contactsUploaded = true
-        } catch {
-            print("Error fetching contacts")
-            showAlert = true
-        }
+    
+    @State private var showingImportView = false
+    @State private var selection = Set<User>()
+    @State private var contacts: [CNContact] = []
+    @State private var emails: [String] = []
+    @State private var phoneNumbers: [String] = []
+    
+    private let maxContacts = 4
+    
+    private var isValidSelection: Bool {
+        selection.count >= maxContacts || (contacts.count + emails.count >= maxContacts)
     }
-
-    private func addEmails() {
-        for email in newEmails {
-            if !email.isEmpty {
-                let colleague = User(email: email)
-                appState.currentUser?.addColleague(colleague)
-                selectedContacts.append(colleague)
-            }
-        }
-        appState.contactsUploaded = true
-    }
-
+    
     var body: some View {
         VStack {
-            Text("Upload your contacts:")
-                .font(.title)
-                .padding()
-
+            List(selection: $selection) {
+                ForEach(appState.contacts) { contact in
+                    let fullName = "\(contact.firstName) \(contact.lastName)"
+                    let isSelected = selection.contains { $0.id == contact.id }
+                    
+                    Button(action: {
+                        if isSelected {
+                            selection.remove(contact)
+                        } else {
+                            selection.insert(contact)
+                        }
+                    }) {
+                        HStack {
+                            Text(fullName)
+                                .fontWeight(isSelected ? .bold : .regular)
+                            Spacer()
+                            if isSelected {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+                
+                ForEach(contacts, id: \.self) { contact in
+                    let fullName = "\(contact.givenName) \(contact.familyName)"
+                    let isSelected = selection.contains(where: { $0.phoneNumber == contact.phoneNumbers.first?.value.stringValue })
+                    
+                    Button(action: {
+                        if isSelected {
+                            if let index = selection.firstIndex(where: { $0.phoneNumber == contact.phoneNumbers.first?.value.stringValue }) {
+                                selection.remove(at: index)
+                            }
+                        } else {
+                            let user = User(id: UUID(),
+                                            email: "",
+                                            firstName: contact.givenName,
+                                            lastName: contact.familyName,
+                                            phoneNumber: contact.phoneNumbers.first?.value.stringValue ?? "")
+                            selection.insert(user)
+                        }
+                    }) {
+                        HStack {
+                            Text(fullName)
+                                .fontWeight(isSelected ? .bold : .regular)
+                            Spacer()
+                            if isSelected {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+                
+                ForEach(emails, id: \.self) { email in
+                    let isSelected = selection.contains(where: { $0.email == email })
+                    
+                    Button(action: {
+                        if isSelected {
+                            if let index = selection.firstIndex(where: { $0.email == email }) {
+                                selection.remove(at: index)
+                            }
+                        } else {
+                            let user = User(id: UUID(),
+                                            email: email,
+                                            firstName: "",
+                                            lastName: "",
+                                            phoneNumber: "")
+                            selection.insert(user)
+                        }
+                    }) {
+                        HStack {
+                            Text(email)
+                                .fontWeight(isSelected ? .bold : .regular)
+                            Spacer()
+                            if isSelected {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+            }
+            .navigationBarTitle("Upload Contacts")
+            .navigationBarItems(trailing: Button("Import") {
+                self.showingImportView = true
+            })
+            .sheet(isPresented: $showingImportView) {
+                ContactImportViewWrapper(contacts: self.$contacts, emails: self.$emails, phoneNumbers: self.$phoneNumbers)
+            }
+            
             Button(action: {
-                uploadContacts()
-            }) {
-                Text("Upload")
-                    .font(.title)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .padding()
-            .alert(isPresented: $showAlert) {
-                Alert(title: Text("Error"), message: Text("There was an error uploading your contacts. Please try again."), dismissButton: .default(Text("OK")))
-            }
-
-            ForEach(0..<max(0, 4 - selectedContacts.count), id: \.self) { index in
-                TextField("Add email address", text: $newEmails[index])
-                    .padding()
-                    .background(Color(white: 0.9))
-                    .cornerRadius(8)
-                    .padding(.horizontal)
-            }
-
-            Button(action: {
-                addEmails()
+                appState.colleagues.append(contentsOf: selection)
+                selection.removeAll()
             }) {
                 Text("Submit")
-                    .font(.title)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(selectedContacts.count + newEmails.filter { !$0.isEmpty }.count >= 4 ? Color.green : Color.gray)
+                    .font(.headline)
                     .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .padding()
-            .disabled(selectedContacts.count + newEmails.filter { !$0.isEmpty }.count < 4)
-        }
-        .padding()
-    }
-}
+                    .padding()
+            }}}}
+

@@ -9,90 +9,82 @@ import SwiftUI
 
 struct PollView: View {
     @EnvironmentObject var appState: AppState
-    @State private var currentQuestionIndex = 0
-    @State private var selectedAnswer: String? = nil
     
-    let questions = [
+    @State var selectedAnswer: UUID?
+    @State var currentQuestion = 0
+    
+    var questions = [
         "Most collaborative",
         "Best listener",
+        "Most reliable",
         "Most innovative",
         "Best problem solver",
         "Most adaptable",
-        "Best at time management",
-        "Strongest work ethic",
-        "Most reliable",
-        "Best communicator",
-        "Most detail-oriented",
-        "Strongest leadership",
-        "Best at conflict resolution",
-        "Most helpful",
-        "Best mentor",
-        "Most positive attitude",
-        "Most knowledgeable",
-        "Best team player",
-        "Most proactive",
-        "Best critical thinker",
-        "Best decision maker",
-        "Strongest negotiation skills",
-        "Most efficient",
-        "Most organized",
-        "Best at delegating",
-        "Strongest networking skills",
-        "Best at multitasking",
         "Most supportive",
-        "Most customer-focused",
-        "Best at motivating others",
-        "Best at meeting deadlines"
+        "Best communicator",
+        "Best team player",
+        "Most positive attitude",
+        "Most organized",
+        "Most detail-oriented",
+        "Best decision maker",
+        "Most resilient",
+        "Most proactive",
+        "Best at managing stress",
+        "Best mentor",
+        "Most efficient",
+        "Most accountable",
+        "Best conflict resolver",
+        "Most empathetic",
+        "Best at delegating tasks",
+        "Most punctual",
+        "Best at giving feedback",
+        "Most strategic thinker",
+        "Best at building relationships",
+        "Most resourceful",
+        "Best work ethic",
+        "Most consistent",
+        "Best at motivating others"
     ]
-    
-    private func nextQuestion() {
-        if currentQuestionIndex < questions.count - 1 {
-            currentQuestionIndex += 1
-        } else {
-            currentQuestionIndex = 0
-        }
-        selectedAnswer = nil
-    }
     
     var body: some View {
         VStack {
-            Text("Question: \(questions[currentQuestionIndex])")
-                .font(.largeTitle)
-                .padding()
+            Text("Question \(currentQuestion + 1) of \(questions.count): \(questions[currentQuestion])")
+                .font(.headline)
+                .padding(.bottom, 20)
             
-            let colleagues = Array(appState.currentUser?.attributes.keys.shuffled().prefix(4) ?? [])
-            ForEach(colleagues, id: \.self) { colleague in
+            ForEach(appState.colleagues) { colleague in
                 Button(action: {
-                    selectedAnswer = colleague
+                    selectedAnswer = colleague.id
                 }) {
-                    Text(colleague)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(selectedAnswer == colleague ? Color.blue : Color.gray)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    Text("\(colleague.firstName) \(colleague.lastName)")
                 }
-                .padding(.horizontal)
+                .buttonStyle(ColleagueButtonStyle())
+                .disabled(selectedAnswer != nil)
             }
             
-            Spacer()
-            
-            Button(action: {
-                if let answer = selectedAnswer {
-                    appState.currentUser?.attributes[answer, default: 0] += 1
-                    nextQuestion()
+            if selectedAnswer != nil {
+                Button("Next question") {
+                    if currentQuestion == questions.count - 1 {
+                        appState.addPollAnswer(answerId: selectedAnswer!, question: questions[currentQuestion])
+                        selectedAnswer = nil
+                        currentQuestion = 0
+                    } else {
+                        appState.addPollAnswer(answerId: selectedAnswer!, question: questions[currentQuestion])
+                        selectedAnswer = nil
+                        currentQuestion += 1
+                    }
                 }
-            }) {
-                Text("Submit")
-                    .font(.title)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                .buttonStyle(CustomButtonStyle(foregroundColor: .green))
             }
-            .padding()
-            .disabled(selectedAnswer == nil)
         }
+        .padding()
+        .navigationBarTitle("Poll")
+    }
+}
+
+struct PollView_Previews: PreviewProvider {
+    static var previews: some View {
+        PollView()
+            .environmentObject(AppState())
     }
 }

@@ -7,17 +7,19 @@
 
 import Foundation
 
-class User: Identifiable, ObservableObject {
-    let id = UUID()
-    var email: String
-    @Published var colleagues: [User] = []
-    @Published var attributes: [String: Int] = [:]
+struct User: Identifiable, Codable, Hashable {
+    var id = UUID()
+    let email: String
+    let firstName: String
+    let lastName: String
+    let phoneNumber: String?
 
-    init(email: String) {
+    init(id: UUID = UUID(), email: String, firstName: String, lastName: String, phoneNumber: String? = nil) {
+        self.id = id
         self.email = email
-    }
-
-    func addColleague(_ colleague: User) {
-        colleagues.append(colleague)
+        self.firstName = firstName
+        self.lastName = lastName
+        self.phoneNumber = phoneNumber
     }
 }
+

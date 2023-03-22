@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C112E97929CA9BD500E52806 /* ContactImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C112E97829CA9BD500E52806 /* ContactImportView.swift */; };
+		C112E97B29CAA3AA00E52806 /* ColleagueButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C112E97A29CAA3AA00E52806 /* ColleagueButtonStyle.swift */; };
+		C112E97D29CAA3DE00E52806 /* CustomButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C112E97C29CAA3DE00E52806 /* CustomButtonStyle.swift */; };
+		C112E97F29CAA6EF00E52806 /* ContactImportViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C112E97E29CAA6EF00E52806 /* ContactImportViewWrapper.swift */; };
 		C136913729C4E7D5009300A2 /* Org_CultureApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C136913629C4E7D5009300A2 /* Org_CultureApp.swift */; };
 		C136913929C4E7D5009300A2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C136913829C4E7D5009300A2 /* ContentView.swift */; };
 		C136913B29C4E7D6009300A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C136913A29C4E7D6009300A2 /* Assets.xcassets */; };
@@ -22,7 +26,6 @@
 		C136916E29C53B8F009300A2 /* AttributeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C136916D29C53B8F009300A2 /* AttributeView.swift */; };
 		C136917029C5413C009300A2 /* EmailInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C136916F29C5413C009300A2 /* EmailInputView.swift */; };
 		C136917229C5416E009300A2 /* ContactsUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C136917129C5416E009300A2 /* ContactsUploadView.swift */; };
-		C136917429C54348009300A2 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C136917329C54348009300A2 /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +46,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C112E97829CA9BD500E52806 /* ContactImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactImportView.swift; sourceTree = "<group>"; };
+		C112E97A29CAA3AA00E52806 /* ColleagueButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColleagueButtonStyle.swift; sourceTree = "<group>"; };
+		C112E97C29CAA3DE00E52806 /* CustomButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonStyle.swift; sourceTree = "<group>"; };
+		C112E97E29CAA6EF00E52806 /* ContactImportViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactImportViewWrapper.swift; sourceTree = "<group>"; };
 		C136913329C4E7D5009300A2 /* Org Culture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Org Culture.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C136913629C4E7D5009300A2 /* Org_CultureApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Org_CultureApp.swift; sourceTree = "<group>"; };
 		C136913829C4E7D5009300A2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -62,7 +69,6 @@
 		C136916D29C53B8F009300A2 /* AttributeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeView.swift; sourceTree = "<group>"; };
 		C136916F29C5413C009300A2 /* EmailInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailInputView.swift; sourceTree = "<group>"; };
 		C136917129C5416E009300A2 /* ContactsUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsUploadView.swift; sourceTree = "<group>"; };
-		C136917329C54348009300A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,20 +119,23 @@
 		C136913529C4E7D5009300A2 /* Org Culture */ = {
 			isa = PBXGroup;
 			children = (
+				C112E97E29CAA6EF00E52806 /* ContactImportViewWrapper.swift */,
 				C136913629C4E7D5009300A2 /* Org_CultureApp.swift */,
 				C136913829C4E7D5009300A2 /* ContentView.swift */,
 				C136916B29C53ADB009300A2 /* PollView.swift */,
+				C112E97C29CAA3DE00E52806 /* CustomButtonStyle.swift */,
 				C136916F29C5413C009300A2 /* EmailInputView.swift */,
 				C136917129C5416E009300A2 /* ContactsUploadView.swift */,
 				C136916D29C53B8F009300A2 /* AttributeView.swift */,
 				C136916729C4ED73009300A2 /* AppState.swift */,
 				C136916929C4EDB2009300A2 /* Utilities.swift */,
 				C136916529C4EB84009300A2 /* User.swift */,
+				C112E97A29CAA3AA00E52806 /* ColleagueButtonStyle.swift */,
+				C112E97829CA9BD500E52806 /* ContactImportView.swift */,
 				C136913A29C4E7D6009300A2 /* Assets.xcassets */,
 				C136913C29C4E7D6009300A2 /* Org_Culture.entitlements */,
 				C136913D29C4E7D6009300A2 /* Preview Content */,
 				C136916329C4E9BC009300A2 /* Questions */,
-				C136917329C54348009300A2 /* Info.plist */,
 			);
 			path = "Org Culture";
 			sourceTree = "<group>";
@@ -260,7 +269,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C136917429C54348009300A2 /* Info.plist in Resources */,
 				C136916429C4E9BC009300A2 /* Questions in Resources */,
 				C136913F29C4E7D6009300A2 /* Preview Assets.xcassets in Resources */,
 				C136913B29C4E7D6009300A2 /* Assets.xcassets in Resources */,
@@ -291,11 +299,15 @@
 				C136913929C4E7D5009300A2 /* ContentView.swift in Sources */,
 				C136917229C5416E009300A2 /* ContactsUploadView.swift in Sources */,
 				C136916E29C53B8F009300A2 /* AttributeView.swift in Sources */,
+				C112E97B29CAA3AA00E52806 /* ColleagueButtonStyle.swift in Sources */,
 				C136917029C5413C009300A2 /* EmailInputView.swift in Sources */,
 				C136916C29C53ADB009300A2 /* PollView.swift in Sources */,
+				C112E97D29CAA3DE00E52806 /* CustomButtonStyle.swift in Sources */,
 				C136916629C4EB84009300A2 /* User.swift in Sources */,
 				C136913729C4E7D5009300A2 /* Org_CultureApp.swift in Sources */,
+				C112E97F29CAA6EF00E52806 /* ContactImportViewWrapper.swift in Sources */,
 				C136916A29C4EDB2009300A2 /* Utilities.swift in Sources */,
+				C112E97929CA9BD500E52806 /* ContactImportView.swift in Sources */,
 				C136916829C4ED73009300A2 /* AppState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -383,6 +395,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Org Culture/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -435,6 +451,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Org Culture/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;

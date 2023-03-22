@@ -9,6 +9,8 @@ import SwiftUI
 import Combine
 
 class AppState: ObservableObject {
+    @Published var contacts: [User] = []
+    @Published var colleagues: [User] = []
     @Published var currentUser: User?
     @Published var emailSubmitted: Bool = false
     @Published var contactsUploaded: Bool = false
