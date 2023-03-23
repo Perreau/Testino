@@ -13,12 +13,13 @@ struct ContactImportView: UIViewControllerRepresentable {
     @Binding var contacts: [User]
     @Binding var emails: [String]
     @Binding var phoneNumbers: [String]
+    @Binding var showingImportView: Bool
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(showingImportView: $appState.wrappedValue.showingImportView,
-                    contacts: $contacts,
+        Coordinator(contacts: $contacts,
                     emails: $emails,
-                    phoneNumbers: $phoneNumbers)
+                    phoneNumbers: $phoneNumbers,
+                    showingImportView: $showingImportView)
     }
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<ContactImportView>) -> CNContactPickerViewController {
@@ -32,16 +33,16 @@ struct ContactImportView: UIViewControllerRepresentable {
 }
 
 class Coordinator: NSObject, CNContactPickerDelegate {
-    @Binding var showingImportView: Bool
     var contacts: Binding<[User]>
     var emails: Binding<[String]>
     var phoneNumbers: Binding<[String]>
+    var showingImportView: Binding<Bool>
     
-    init(showingImportView: Binding<Bool>, contacts: Binding<[User]>, emails: Binding<[String]>, phoneNumbers: Binding<[String]>) {
-        _showingImportView = showingImportView
+    init(contacts: Binding<[User]>, emails: Binding<[String]>, phoneNumbers: Binding<[String]>, showingImportView: Binding<Bool>) {
         self.contacts = contacts
         self.emails = emails
         self.phoneNumbers = phoneNumbers
+        self.showingImportView = showingImportView
     }
     
     func contactPicker(_ picker: CNContactPickerViewController, didSelect contacts: [CNContact]) {
@@ -69,10 +70,10 @@ class Coordinator: NSObject, CNContactPickerDelegate {
                 self.emails.wrappedValue.append(email)
             }
         }
-        showingImportView = false
+        showingImportView.wrappedValue = false
     }
     
     func contactPickerDidCancel(_ picker: CNContactPickerViewController) {
-        showingImportView = false
+        showingImportView.wrappedValue = false
     }
 }
