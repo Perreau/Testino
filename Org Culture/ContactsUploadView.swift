@@ -6,7 +6,42 @@
 //
 
 import SwiftUI
-import ContactsUI
+import Contacts
+
+struct User: Identifiable, Equatable {
+    let id: UUID
+    let email: String
+    let firstName: String
+    let lastName: String
+    let phoneNumber: String
+    
+    static func == (lhs: User, rhs: User) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
+class AppState: ObservableObject {
+    @Published var colleagues: [User] = []
+    @Published var contacts: [User] = []
+    
+    func addPollAnswer(answerId: UUID, question: String) {
+        guard let colleague = colleagues.first(where: { $0.id == answerId }) else { return }
+        colleague.answers.append(question)
+    }
+}
+
+struct ContactImportViewWrapper: UIViewControllerRepresentable {
+    @Binding var contacts: [CNContact]
+    @Binding var emails: [String]
+    @Binding var phoneNumbers: [String]
+    
+    func makeUIViewController(context: Context) -> ContactImportViewController {
+        ContactImportViewController(contacts: $contacts, emails: $emails, phoneNumbers: $phoneNumbers)
+    }
+    
+    func updateUIViewController(_ uiViewController: ContactImportViewController, context: Context) {
+    }
+}
 
 struct ContactsUploadView: View {
     @EnvironmentObject var appState: AppState
@@ -27,7 +62,7 @@ struct ContactsUploadView: View {
         VStack {
             List(selection: $selection) {
                 ForEach(appState.contacts) { contact in
-                    let fullName = "\(contact.firstName) \(contact.lastName)"
+                    let fullName = "\(contact.firstName ?? "") \(contact.lastName)"
                     let isSelected = selection.contains { $0.id == contact.id }
                     
                     Button(action: {
@@ -84,45 +119,3 @@ struct ContactsUploadView: View {
                     
                     Button(action: {
                         if isSelected {
-                            if let index = selection.firstIndex(where: { $0.email == email }) {
-                                selection.remove(at: index)
-                            }
-                        } else {
-                            let user = User(id: UUID(),
-                                            email: email,
-                                            firstName: "",
-                                            lastName: "",
-                                            phoneNumber: "")
-                            selection.insert(user)
-                        }
-                    }) {
-                        HStack {
-                            Text(email)
-                                .fontWeight(isSelected ? .bold : .regular)
-                            Spacer()
-                            if isSelected {
-                                Image(systemName: "checkmark")
-                            }
-                        }
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                }
-            }
-            .navigationBarTitle("Upload Contacts")
-            .navigationBarItems(trailing: Button("Import") {
-                self.showingImportView = true
-            })
-            .sheet(isPresented: $showingImportView) {
-                ContactImportViewWrapper(contacts: self.$contacts, emails: self.$emails, phoneNumbers: self.$phoneNumbers)
-            }
-            
-            Button(action: {
-                appState.colleagues.append(contentsOf: selection)
-                selection.removeAll()
-            }) {
-                Text("Submit")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-            }}}}
-

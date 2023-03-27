@@ -29,13 +29,8 @@ struct PollView: View {
                 .font(.headline)
                 .padding(.bottom, 20)
 
-            ForEach(appState.colleagues) { colleague in
-                Button(action: { selectedAnswer = colleague.id }) {
-                    Text(colleague.firstName + " " + colleague.lastName + (colleague.phoneNumber.map { " (\($0))" } ?? ""))
-                }
-                .buttonStyle(ColleagueButton())
-                .disabled(selectedAnswer != nil)
-            }
+            ColleaguesListView(colleagues: appState.colleagues.map({ Colleague(id: $0.id, firstName: $0.firstName, lastName: $0.lastName, phoneNumber: $0.phoneNumber) }), selectedAnswer: $selectedAnswer)
+            
             if selectedAnswer != nil {
                 Button("Next question") {
                     appState.addPollAnswer(answerId: selectedAnswer!, question: questions[currentQuestion])
@@ -50,10 +45,26 @@ struct PollView: View {
     }
 }
 
+struct ColleaguesListView: View {
+    let colleagues: [Colleague]
+    @Binding var selectedAnswer: UUID?
+    
+    var body: some View {
+        ForEach(colleagues) { colleague in
+            Button(action: { selectedAnswer = colleague.id }) {
+                Text(colleague.firstName + " " + colleague.lastName + (colleague.phoneNumber.map { " (\($0))" } ?? ""))
+            }
+            .buttonStyle(ColleagueButton())
+            .disabled(selectedAnswer != nil)
+        }
+    }
+}
+
 struct Colleague: Identifiable {
     let id: UUID
     let firstName: String
     let lastName: String
+    let phoneNumber: String?
 }
 
 struct ColleagueButton: ButtonStyle {
